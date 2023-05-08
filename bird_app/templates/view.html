@@ -1,7 +1,7 @@
 {% extends "base.html"%}
 {% block content%}
-<div class="column is-6 is-offset-3">
-    <h1 class="title">Add a Visit</h1>
+<div class="column is-4 is-offset-4">
+    <h1 class="title">View a Visit</h1>
     <div class="box">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -10,22 +10,19 @@
             </div>
         {% endif %}
         {% endwith %}
-        <form method="POST" action="/addvisit">
+        <form method="POST" action="{{ url_for('main.editVisit', visit_id=visit.visit_id) }}">
             <div class="field">
                 <div class="control">
                     <label for="visit_date">Date of visit: </label>
-                    <input class="input" type="date" name="visit_date" id="visit_date" placeholder="0" autofocus="">
+                    <input class="input" type="date" name="visit_date" id="visit_date" value="{{ visit.visit_date}}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="birdhouse_id">Choose a birdhouse: </label>
                     <div class="select">
-                        <select name="birdhouse_id" id="birdhouse_id" autofocus="" required>
-                            <option value="0">Choose a birdhouse</option>
-                            {% for birdhouse in birdhouse_list %}
-                                <option value="{{ birdhouse.birdhouse_id }}">{{ birdhouse.nickname }}</option>
-                            {% endfor %}
+                        <select name="birdhouse_id" id="birdhouse_id" readonly>
+                            <option value="{{ visit.birdhouse_id }}">{{ birdhouse_nickname }}</option>
                         </select>
                     </div>
                 </div>
@@ -34,73 +31,76 @@
                 <div class="control">
                     <label for="species_id">Which species is present: </label>
                     <div class="select">
-                        <select name="species_id" id="species_id" autofocus="" required>
-                            <option value="0">Choose a species</option>
-                            {% for species in species_list %}
-                                <option value="{{ species.species_id }}">{{ species.species_name }}</option>
-                            {% endfor %}
+                        <select name="species_id" id="species_id" readonly>
+                                <option value="{{ visit.species_id }}">{{ species_name }}</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <label for="new_species">Enter new species name (optional):</label>
-                    <input class="input is-large" type="text" name="new_species" id="new_species" placeholder="" autofocus="">
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
                     <label for="species_eggs">Number of nesting species eggs:</label>
-                    <input class="input is-large" type="number" name="species_eggs" id="species_eggs" placeholder="0" autofocus="" required>
+                    <input class="input is-large" type="number" name="species_eggs"
+                           id="species_eggs" value="{{ visit.species_eggs_amount }}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="species_live_young">Number of nesting species live young:</label>
-                    <input class="input is-large" type="number" name="species_live_young" id="species_live_young" placeholder="0" autofocus="" required>
+                    <input class="input is-large" type="number" name="species_live_young"
+                           id="species_live_young" value="{{ visit.species_live_young_amount }}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="species_dead_young">Number of nesting species dead young:</label>
-                    <input class="input is-large" type="number" name="species_dead_young" id="species_dead_young" placeholder="0" autofocus="" required>
+                    <input class="input is-large" type="number" name="species_dead_young"
+                           id="species_dead_young" value="{{ visit.species_dead_young_amount }}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="cowbird_eggs">Number of Cowbird eggs:</label>
-                    <input class="input is-large" type="number" name="cowbird_eggs" id="cowbird_eggs" placeholder="0" autofocus="" required>
+                    <input class="input is-large" type="number" name="cowbird_eggs"
+                           id="cowbird_eggs" value="{{ visit.cowbird_eggs_amount }}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="cowbird_live_young">Number of Cowbird live young:</label>
-                    <input class="input is-large" type="number" name="cowbird_live_young" id="cowbird_live_young" placeholder="0" autofocus="" required>
+                    <input class="input is-large" type="number" name="cowbird_live_young"
+                           id="cowbird_live_young" value="{{ visit.cowbird_live_young_amount }}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="cowbird_dead_young">Number of Cowbird dead young:</label>
-                    <input class="input is-large" type="number" name="cowbird_dead_young" id="cowbird_dead_young" placeholder="0" autofocus="" required>
+                    <input class="input is-large" type="number" name="cowbird_dead_young"
+                           id="cowbird_dead_young" value="{{ visit.cowbird_dead_young_amount }}" readonly>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="comments">Enter Comments:</label>
-                    <textarea class="textarea" name="comments" id="comments" placeholder="comments" autofocus=""></textarea>
+                    <textarea class="textarea" name="comments" id="comments" placeholder="comments" readonly>
+                        {{visit.comments}}
+                    </textarea>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
                     <label for="needs_repairs" class="checkbox">
-                        <input type="checkbox" name="needs_repairs" id="needs_repairs" value="1">
+                        <input type="checkbox" name="needs_repairs" id="needs_repairs"
+                               {% if visit.needs_repair %}
+                                    checked
+                               {% endif %}
+                         readonly>
                         Needs Repairs
                         </label>
                 </div>
             </div>
 
-            <button class="button is-block is-info is-large is-fullwidth">Add Visit</button>
+            <button class="button is-block is-info is-large is-fullwidth">Edit Visit</button>
         </form>
     </div>
 </div>

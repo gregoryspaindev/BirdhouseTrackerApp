@@ -1,0 +1,46 @@
+{% extends "base.html"%}
+{% block content%}
+<div class="column is-4 is-offset-4">
+    <h1 class="title">Choose a Visit</h1>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}. Go to <a href="{{ url_for('auth.signup') }}">login page</a>.
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{url_for('main.chooseVisit')}}">
+            <div class="field">
+                <div class="control">
+                    <label for="birdhouse_id">Choose a birdhouse to view visits: </label>
+                    <div class="select">
+                        <select name="birdhouse_id" id="birdhouse_id" autofocus="true" required>
+                            <option value="0">Choose a birdhouse</option>
+                            {% for birdhouse in birdhouse_list %}
+                                <option value="{{ birdhouse.birdhouse_id }}">{{ birdhouse.nickname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth">View Visits</button>
+        </form>
+    </div>
+</div>
+
+{% if visit_list %}
+    <div class="column is-4 is-offset-4">
+        <div class="box">
+            <ul>
+                {% for visit in visit_list %}
+                    <li><a href="{{ url_for('main.viewVisit', visit_id=visit.visit_id) }}">{{ visit.visit_date }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+
+
+{% endblock %}
