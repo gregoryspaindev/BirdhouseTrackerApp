@@ -43,7 +43,8 @@ def signup_post():
         return redirect(url_for('auth.signup'))
 
     # create new user
-    new_user = User(email=email, first_name=first_name, last_name=last_name, password=generate_password_hash(password, method='scrypt'))
+    new_user = User(email=email, first_name=first_name, last_name=last_name,
+                    password=generate_password_hash(password, method="scrypt"))
     db.session.add(new_user)
     db.session.commit()
 
@@ -60,4 +61,3 @@ def signup():
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
-
