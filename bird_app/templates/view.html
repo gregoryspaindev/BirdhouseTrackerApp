@@ -1,6 +1,6 @@
 {% extends "base.html"%}
 {% block content%}
-<div class="column is-4 is-offset-4">
+<div class="column is-6 is-offset-3">
     <h1 class="title">View a Visit</h1>
     <div class="box">
         {% with messages = get_flashed_messages() %}
@@ -10,7 +10,7 @@
             </div>
         {% endif %}
         {% endwith %}
-        <form method="POST" action="{{ url_for('main.editVisit', visit_id=visit.visit_id) }}">
+        <form method="POST" action="{{ url_for('main.edit_visit', visit_id=visit.visit_id) }}">
             <div class="field">
                 <div class="control">
                     <label for="visit_date">Date of visit: </label>
@@ -82,9 +82,7 @@
             <div class="field">
                 <div class="control">
                     <label for="comments">Enter Comments:</label>
-                    <textarea class="textarea" name="comments" id="comments" placeholder="comments" readonly>
-                        {{visit.comments}}
-                    </textarea>
+                    <textarea class="textarea" name="comments" id="comments" placeholder="comments" readonly>{{visit.comments}}</textarea>
                 </div>
             </div>
             <div class="field">
@@ -100,8 +98,9 @@
                 </div>
             </div>
 
-            <button class="button is-block is-info is-large is-fullwidth">Edit Visit</button>
+            <button class="button is-block my-button is-large is-fullwidth">Edit Visit</button>
         </form>
+        <a href="{{ url_for('main.choose_birdhouse') }}" class="button is-large my-button is-fullwidth">View/Edit a Visit</a>
     </div>
 </div>
 {% endblock %}

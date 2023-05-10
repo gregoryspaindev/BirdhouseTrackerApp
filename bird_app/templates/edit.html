@@ -1,16 +1,16 @@
 {% extends "base.html"%}
 {% block content%}
-<div class="column is-4 is-offset-4">
+<div class="column is-6 is-offset-3">
     <h1 class="title">View a Visit</h1>
     <div class="box">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
             <div class="notification is-danger">
-                {{ messages[0] }}. Go to <a href="{{ url_for('auth.signup') }}">login page</a>.
+                {{ messages[0] }}. Go to <a href="{{ url_for('auth.login') }}">login page</a>.
             </div>
         {% endif %}
         {% endwith %}
-        <form method="POST" action="{{ url_for('main.postEditVisit', visit_id=visit.visit_id) }}">
+        <form method="POST" action="{{ url_for('main.post_edit_visit', visit_id=visit.visit_id) }}">
             <div class="field">
                 <div class="control">
                     <label for="visit_date">Date of visit: </label>
@@ -114,7 +114,7 @@
 
             <button class="button is-block is-info is-large is-fullwidth">Save Edit</button>
         </form>
-        <form method="POST" action="{{ url_for('main.deleteVisit', visit_id=visit.visit_id) }}">
+        <form method="POST" action="{{ url_for('main.delete_visit', visit_id=visit.visit_id) }}">
             <button class="button is-block is-danger is-large is-fullwidth">Delete Visit</button>
         </form>
     </div>

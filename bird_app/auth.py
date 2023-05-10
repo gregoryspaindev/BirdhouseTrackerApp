@@ -26,34 +26,7 @@ def login_post():
         return redirect(url_for('auth.login'))
 
     login_user(user, remember=remember)
-    return redirect(url_for('main.profile'))
-
-
-@auth.route('/signup', methods=['POST'])
-def signup_post():
-    email = request.form.get('email')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-    password = request.form.get('password')
-
-    # query to see if user exists with this email
-    user = User.query.filter_by(email=email).first()
-    if user:
-        flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
-
-    # create new user
-    new_user = User(email=email, first_name=first_name, last_name=last_name,
-                    password=generate_password_hash(password, method="scrypt"))
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect(url_for('auth.login'))
-
-
-@auth.route('/signup')
-def signup():
-    return render_template('signup.html')
+    return redirect(url_for('main.user'))
 
 
 @auth.route('/logout')

@@ -7,34 +7,19 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Flask Auth Example</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <section class="hero is-info is-fullheight">
         <div class="hero-head">
+
             <nav class="navbar">
                 <div class="container">
-                    <div id="navbarMenuHeroA" class="navbar-menu">
+                    <div id="navbarMenuHeroA" class="navbar-menu is-active">
                         <div class="navbar-end">
-                            <a href="{{ url_for('main.index') }}" >
-                                Home
-                            </a>
                             {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('main.profile') }}" >
-                                Profile
-                            </a>
-                            {% endif %}
-                            {% if not current_user.is_authenticated %}
-                            <a href="{{ url_for('auth.login') }}" >
-                                Login
-                            </a>
-                            <a href="{{ url_for('auth.signup') }}" >
-                                Sign Up
-                            </a>
-                            {% endif %}
-                            {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('auth.logout') }}" >
-                                Logout
-                            </a>
+                            <a href="{{ url_for('main.user') }}" class="button my-button is-large">Home</a>
+                            <a href="{{ url_for('auth.logout') }}" class="button my-button is-large">Logout</a>
                             {% endif %}
                         </div>
                     </div>

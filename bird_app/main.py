@@ -16,15 +16,15 @@ def index():
     return render_template('index.html')
 
 
-@main.route('/profile')
+@main.route('/user')
 @login_required
-def profile():
-    return render_template('profile.html', first_name=current_user.first_name)
+def user():
+    return render_template('user.html', first_name=current_user.first_name)
 
 
 @main.route('/addvisit')
 @login_required
-def addVisit():
+def add_visit():
     birdhouse_list = Birdhouse.query.filter_by()
     species_list = Species.query.filter_by()
     return render_template('addvisit.html', birdhouse_list=birdhouse_list, species_list=species_list)
@@ -32,7 +32,7 @@ def addVisit():
 
 @main.route('/addvisit', methods=["POST"])
 @login_required
-def postAddVisit():
+def post_add_visit():
     visit_date = datetime.strptime(request.form.get('visit_date'), '%Y-%m-%d')
     birdhouse_id = request.form.get('birdhouse_id')
     user_id = int(current_user.get_id())
@@ -49,15 +49,23 @@ def postAddVisit():
     species_eggs_amount = request.form.get('species_eggs')
     species_live_young_amount = request.form.get('species_live_young')
     species_dead_young_amount = request.form.get('species_dead_young')
-    cowbird_eggs_amount = request.form.get('cowbird_eggs')
-    cowbird_live_young_amount = request.form.get('cowbird_live_young')
-    cowbird_dead_young_amount = request.form.get('cowbird_dead_young')
+    cowbird_eggs_amount = int(request.form.get('cowbird_eggs'))
+    cowbird_live_young_amount = int(request.form.get('cowbird_live_young'))
+    cowbird_dead_young_amount = int(request.form.get('cowbird_dead_young'))
     needs_repair = request.form.get('needs_repairs')
+    comments = request.form.get('comments')
+    cowbird_flag = 0
+    if cowbird_eggs_amount > 0 or cowbird_live_young_amount > 0 or cowbird_dead_young_amount > 0:
+        cowbird_flag = 1
     if needs_repair is None:
         needs_repair = 0
     else:
         needs_repair = 1
-    comments = request.form.get('comments')
+
+    birdhouse = Birdhouse.query.filter_by(birdhouse_id=birdhouse_id).first()
+    birdhouse.repair_flag = needs_repair
+    birdhouse.cowbird_flag = cowbird_flag
+    db.session.commit()
 
     new_visit = Visit(visit_date=visit_date,
                       birdhouse_id=birdhouse_id,
@@ -74,28 +82,30 @@ def postAddVisit():
     db.session.add(new_visit)
     db.session.commit()
 
-    return redirect(url_for('main.profile'))
+    new_visit_test = Visit.query.filter_by(visit_date=visit_date, birdhouse_id=birdhouse_id, user_id=user_id).first()
+
+    return redirect(url_for('main.view_visit', visit_id=new_visit_test.visit_id))
 
 
 @main.route('/choose', methods=["POST"])
 @login_required
-def chooseVisit():
+def choose_visit():
     birdhouse_list = Birdhouse.query.filter_by()
     birdhouse_id = request.form.get('birdhouse_id')
-    visit_list = Visit.query.filter_by(birdhouse_id=birdhouse_id)
+    visit_list = Visit.query.filter_by(birdhouse_id=birdhouse_id).order_by(Visit.visit_date.desc())
     return render_template('choose.html', birdhouse_list=birdhouse_list, visit_list=visit_list)
 
 
 @main.route('/choose')
 @login_required
-def chooseBirdhouse():
+def choose_birdhouse():
     birdhouse_list = Birdhouse.query.filter_by()
     return render_template('choose.html', birdhouse_list=birdhouse_list)
 
 
 @main.route('/view/<int:visit_id>')
 @login_required
-def viewVisit(visit_id):
+def view_visit(visit_id):
     visit = Visit.query.filter_by(visit_id=visit_id).first()
     birdhouse = Birdhouse.query.filter_by(birdhouse_id=visit.birdhouse_id).first()
     birdhouse_nickname = birdhouse.nickname
@@ -106,7 +116,7 @@ def viewVisit(visit_id):
 
 @main.route('/view/edit/<int:visit_id>', methods=['POST'])
 @login_required
-def editVisit(visit_id):
+def edit_visit(visit_id):
     visit = Visit.query.filter_by(visit_id=visit_id).first()
     birdhouse = Birdhouse.query.filter_by(birdhouse_id=visit.birdhouse_id).first()
     birdhouse_nickname = birdhouse.nickname
@@ -121,7 +131,7 @@ def editVisit(visit_id):
 
 @main.route('/edit/<int:visit_id>', methods=["POST"])
 @login_required
-def postEditVisit(visit_id):
+def post_edit_visit(visit_id):
     visit_date = datetime.strptime(request.form.get('visit_date'), '%Y-%m-%d')
     birdhouse_id = request.form.get('birdhouse_id')
     user_id = int(current_user.get_id())
@@ -138,15 +148,22 @@ def postEditVisit(visit_id):
     species_eggs_amount = request.form.get('species_eggs')
     species_live_young_amount = request.form.get('species_live_young')
     species_dead_young_amount = request.form.get('species_dead_young')
-    cowbird_eggs_amount = request.form.get('cowbird_eggs')
-    cowbird_live_young_amount = request.form.get('cowbird_live_young')
-    cowbird_dead_young_amount = request.form.get('cowbird_dead_young')
+    cowbird_eggs_amount = int(request.form.get('cowbird_eggs'))
+    cowbird_live_young_amount = int(request.form.get('cowbird_live_young'))
+    cowbird_dead_young_amount = int(request.form.get('cowbird_dead_young'))
     needs_repair = request.form.get('needs_repairs')
+    comments = request.form.get('comments')
+    cowbird_flag = 0
+    if cowbird_eggs_amount > 0 or cowbird_live_young_amount > 0 or cowbird_dead_young_amount > 0:
+        cowbird_flag = 1
+    birdhouse = Birdhouse.query.filter_by(birdhouse_id=birdhouse_id).first()
     if needs_repair is None:
         needs_repair = 0
     else:
         needs_repair = 1
-    comments = request.form.get('comments')
+
+    birdhouse.repair_flag = needs_repair
+    birdhouse.cowbird_flag = cowbird_flag
 
     existing_visit = Visit.query.filter_by(visit_id=visit_id).first()
     existing_visit.visit_date = visit_date
@@ -163,13 +180,20 @@ def postEditVisit(visit_id):
     existing_visit.comments = comments
 
     db.session.commit()
-    return redirect(url_for('main.viewVisit', visit_id=visit_id))
+    return redirect(url_for('main.view_visit', visit_id=visit_id))
 
 
 @main.route('/delete/<int:visit_id>', methods=["POST"])
 @login_required
-def deleteVisit(visit_id):
+def delete_visit(visit_id):
     visit = Visit.query.filter_by(visit_id=visit_id).first()
     db.session.delete(visit)
     db.session.commit()
     return redirect(url_for('main.profile'))
+
+
+@main.route('/statistics')
+@login_required
+def view_statistics():
+    birdhouse_list = Birdhouse.query.filter_by()
+    return render_template('choose.html', birdhouse_list=birdhouse_list)

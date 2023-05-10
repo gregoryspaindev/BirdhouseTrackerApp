@@ -6,6 +6,7 @@ class Birdhouse(db.Model):
     birdhouse_id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
     repair_flag = db.Column(db.Boolean)
+    cowbird_flag = db.Column(db.Boolean)
 
 
 class User(UserMixin, db.Model):
