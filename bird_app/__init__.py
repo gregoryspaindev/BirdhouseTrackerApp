@@ -2,6 +2,11 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
+# Flask Birdhouse Tracking app for Audubon Miami Valley
+# Author: Gregory Spain
+# Date: May 10, 2023
+
+
 # initialize SQLAlchemy
 db = SQLAlchemy()
 
@@ -9,11 +14,13 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
 
-    app.config['SECRET_KEY'] = '<enter secret key here>'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost:3306/birdapp'
+    # replace inside the <> with your information
+    app.config['SECRET_KEY'] = 'Your Key Here'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Your Connection String'
 
     db.init_app(app)
 
+    # initialize the login manager
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)

@@ -2,6 +2,7 @@ from flask_login import UserMixin
 from bird_app import db
 
 
+# describe the birdhouse Schema
 class Birdhouse(db.Model):
     birdhouse_id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(100), unique=True)
@@ -9,6 +10,7 @@ class Birdhouse(db.Model):
     cowbird_flag = db.Column(db.Boolean)
 
 
+# describe the user Schema
 class User(UserMixin, db.Model):
     user_id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     email = db.Column(db.String(100), unique=True)
@@ -16,15 +18,18 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
 
+    # override the get_id function of the UserMixin since the id isn't just 'id'
     def get_id(self):
         return self.user_id
 
 
+# describe the species Schema
 class Species(db.Model):
     species_id = db.Column(db.Integer, primary_key=True)
     species_name = db.Column(db.String(100), unique=True)
 
 
+# describe the visit Schema
 class Visit(db.Model):
     visit_id = db.Column(db.Integer, primary_key=True)
     visit_date = db.Column(db.Date)
